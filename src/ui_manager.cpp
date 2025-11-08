@@ -1,151 +1,111 @@
 #include "ui_manager.h"
-#include <EEPROM.h>
 
-#define EEPROM_SIZE 20
+// UIManager Implementation
+UIManager::UIManager(LGFX *tft, GT911Touch *touch)
+    : tft(tft), touch(touch), currentPage(PAGE_MAIN),
+      selectedAkku(0), pageNumber(0), lastRender(0), lastI2CRequest(0) {
+    mainPage = new MainPage(this);
+    chargerSettingsPage = new ChargerSettingsPage(this);
+    dischargerSettingsPage = new DischargerSettingsPage(this);
+    settingsPage = new SettingsPage(this);
+    dischargerPage = new DischargerPage(this);
 
-UIManager uiManager;
+    current_page = mainPage;
+}
 
-UIManager::UIManager() {
-    EEPROM.begin(EEPROM_SIZE);
+UIManager::~UIManager() {
+    delete mainPage;
+    delete chargerSettingsPage;
+    delete dischargerPage;
+    delete settingsPage;
 }
 
 void UIManager::begin() {
-    screen = nullptr;
-    showPage(PAGE_MAIN);
+    // Initialisierung
+    tft->fillScreen(TFT_WHITE);
+    tft->setTextColor(TFT_BLACK);
+    tft->setTextSize(3);
 }
 
-void UIManager::showPage(Page page) {
-    currentPage = page;
+void UIManager::update() {
+    // Touch-Handling
+    handleTouch();
 
-    if (screen != nullptr) {
-        lv_obj_clean(screen);
-    } else {
-        screen = lv_scr_act();
+    // Rendering
+    if (millis() - lastRender > 100) {
+        drawPage();
+        lastRender = millis();
     }
+
+    // I2C Daten abrufen
+    if (millis() - lastI2CRequest > 5000) {
+        // I2C Daten abrufen
+        lastI2CRequest = millis();
+    }
+}
+
+void UIManager::handleTouch() {
+    uint16_t touchX, touchY;
+    if (touch->read(&touchX, &touchY)) {
+        int x = map(touchX, 0, 480, 0, 800);
+        int y = map(touchY, 0, 270, 0, 480);
+
+        // Seite aktualisieren
+        current_page->handleTouch(x, y);
+    }
+}
+
+void UIManager::drawPage() {
+    // Seiteninhalt zeichnen
+    current_page->draw(tft);
+}
+
+void UIManager::switchPage(Page page) {
+    currentPage = page;
 
     switch (page) {
         case PAGE_MAIN:
-            createMainMenu();
+            current_page = mainPage;
             break;
-        case PAGE_CHARGER:
-            createChargerPage();
+        case PAGE_CHARGER_SETTINGS:
+            current_page = chargerSettingsPage;
+            break;
+        case PAGE_DISCHARGER_SETTINGS:
+            current_page = dischargerSettingsPage;
             break;
         case PAGE_DISCHARGER:
-            createDischargerPage();
+            current_page = dischargerPage;
             break;
         case PAGE_SETTINGS:
-            createSettingsPage();
+            current_page = settingsPage;
             break;
     }
+
+    // Seite neu zeichnen
+    tft->fillScreen(TFT_WHITE);
+    current_page->draw(tft);
 }
 
-void UIManager::createMainMenu() {
-    lv_obj_t *title = lv_label_create(screen);
-    lv_label_set_text(title, "ESPControl - Main Menu");
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_20, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 20);
-
-    static Page chargerPage = PAGE_CHARGER;
-    lv_obj_t *btnCharger = lv_btn_create(screen);
-    lv_obj_set_size(btnCharger, 200, 60);
-    lv_obj_align(btnCharger, LV_ALIGN_CENTER, 0, -80);
-    lv_obj_add_event_cb(btnCharger, mainMenuButtonHandler, LV_EVENT_CLICKED, &chargerPage);
-
-    lv_obj_t *labelCharger = lv_label_create(btnCharger);
-    lv_label_set_text(labelCharger, "Charger");
-    lv_obj_center(labelCharger);
-
-    static Page dischargerPage = PAGE_DISCHARGER;
-    lv_obj_t *btnDischarger = lv_btn_create(screen);
-    lv_obj_set_size(btnDischarger, 200, 60);
-    lv_obj_align(btnDischarger, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_add_event_cb(btnDischarger, mainMenuButtonHandler, LV_EVENT_CLICKED, &dischargerPage);
-
-    lv_obj_t *labelDischarger = lv_label_create(btnDischarger);
-    lv_label_set_text(labelDischarger, "Discharger");
-    lv_obj_center(labelDischarger);
-
-    static Page settingsPage = PAGE_SETTINGS;
-    lv_obj_t *btnSettings = lv_btn_create(screen);
-    lv_obj_set_size(btnSettings, 200, 60);
-    lv_obj_align(btnSettings, LV_ALIGN_CENTER, 0, 80);
-    lv_obj_add_event_cb(btnSettings, mainMenuButtonHandler, LV_EVENT_CLICKED, &settingsPage);
-
-    lv_obj_t *labelSettings = lv_label_create(btnSettings);
-    lv_label_set_text(labelSettings, "Settings");
-    lv_obj_center(labelSettings);
-}
-
-void UIManager::createChargerPage() {
-    lv_obj_t *btnBack = lv_btn_create(screen);
-    lv_obj_set_size(btnBack, 100, 40);
-    lv_obj_align(btnBack, LV_ALIGN_TOP_LEFT, 10, 10);
-    lv_obj_add_event_cb(btnBack, backButtonHandler, LV_EVENT_CLICKED, nullptr);
-
-    lv_obj_t *labelBack = lv_label_create(btnBack);
-    lv_label_set_text(labelBack, "Back");
-    lv_obj_center(labelBack);
-
-    lv_obj_t *title = lv_label_create(screen);
-    lv_label_set_text(title, "Charger Page");
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_20, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 20);
-}
-
-void UIManager::createDischargerPage() {
-    lv_obj_t *btnBack = lv_btn_create(screen);
-    lv_obj_set_size(btnBack, 100, 40);
-    lv_obj_align(btnBack, LV_ALIGN_TOP_LEFT, 10, 10);
-    lv_obj_add_event_cb(btnBack, backButtonHandler, LV_EVENT_CLICKED, nullptr);
-
-    lv_obj_t *labelBack = lv_label_create(btnBack);
-    lv_label_set_text(labelBack, "Back");
-    lv_obj_center(labelBack);
-
-    lv_obj_t *title = lv_label_create(screen);
-    lv_label_set_text(title, "Discharger Page");
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_20, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 20);
-
-    // Add some buttons for demonstration
-    for (int i = 0; i < 8; i++) {
-        lv_obj_t *btn = lv_btn_create(screen);
-        lv_obj_set_size(btn, 180, 60);
-        lv_obj_align(btn, LV_ALIGN_TOP_LEFT, 20, 100 + (i * 70));
-
-        lv_obj_t *label = lv_label_create(btn);
-        lv_label_set_text_fmt(label, "Button %d", i + 1);
-        lv_obj_center(label);
+void UIManager::handleButtonPress(const String &pageTarget) {
+    if (pageTarget.equals("m")) {
+        switchPage(PAGE_MAIN);
+        return;
     }
-}
+    if (pageTarget.equals("d")) {
+        switchPage(PAGE_DISCHARGER);
+        return;
+    }
+    if (pageTarget.equals("s-c")) {
+        switchPage(PAGE_CHARGER_SETTINGS);
+        return;
+    }
 
-void UIManager::createSettingsPage() {
-    lv_obj_t *btnBack = lv_btn_create(screen);
-    lv_obj_set_size(btnBack, 100, 40);
-    lv_obj_align(btnBack, LV_ALIGN_TOP_LEFT, 10, 10);
-    lv_obj_add_event_cb(btnBack, backButtonHandler, LV_EVENT_CLICKED, nullptr);
+    if (pageTarget.equals("s-d")) {
+        switchPage(PAGE_DISCHARGER_SETTINGS);
+        return;
+    }
 
-    lv_obj_t *labelBack = lv_label_create(btnBack);
-    lv_label_set_text(labelBack, "Back");
-    lv_obj_center(labelBack);
-
-    lv_obj_t *title = lv_label_create(screen);
-    lv_label_set_text(title, "Settings Page");
-    lv_obj_set_style_text_font(title, &lv_font_montserrat_20, 0);
-    lv_obj_align(title, LV_ALIGN_TOP_MID, 0, 20);
-}
-
-void UIManager::updateAkkuData() {
-    // Implementation for updating akku data
-}
-
-void UIManager::mainMenuButtonHandler(lv_event_t *e) {
-    UIManager *ui = &uiManager;
-    Page *page = (Page *)lv_event_get_user_data(e);
-    ui->showPage(*page);
-}
-
-void UIManager::backButtonHandler(lv_event_t *e) {
-    UIManager *ui = &uiManager;
-    ui->showPage(PAGE_MAIN);
+    if (pageTarget.equals("s")) {
+        switchPage(PAGE_SETTINGS);
+    }
 }
