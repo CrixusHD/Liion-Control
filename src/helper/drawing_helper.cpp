@@ -26,3 +26,8 @@ void draw_button(LGFX* gfx, const int x, const int y, const int width, const int
     gfx->setCursor(x + 10, y + (height / 2) - 10);
     gfx->print(text);
 }
+
+void clear_header(LGFX* gfx) {
+    // Alten Header Bereich übermalen (ab y=0 bis y=72)
+    gfx->fillRect(0, 0, 800, 72, TFT_WHITE);
+}

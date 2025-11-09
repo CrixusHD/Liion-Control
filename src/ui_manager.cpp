@@ -1,7 +1,5 @@
 #include "ui_manager.h"
 
-#include "../../../../Users/Nick/.platformio/packages/toolchain-riscv32-esp/riscv32-esp-elf/include/c++/8.4.0/atomic"
-
 // UIManager Implementation
 UIManager::UIManager(LGFX *tft, GT911Touch *touch)
     : tft(tft), touch(touch), currentPage(PAGE_MAIN),
@@ -21,6 +19,8 @@ UIManager::~UIManager() {
     delete chargerSettingsPage;
     delete dischargerPage;
     delete settingsPage;
+    delete dischargerSettingsPage;
+    delete chargerPage;
 }
 
 void UIManager::begin() {
@@ -60,7 +60,7 @@ void UIManager::handleTouch() {
         current_page->handleTouch(x, y);
     }
 
-    if (touchX == 15 && touchY == 0){
+    if (touchX == 0 && touchY == 0){
         notPressed = true;
     }
 }
@@ -85,6 +85,7 @@ void UIManager::switchPage(Page page) {
             break;
         case PAGE_DISCHARGER:
             current_page = dischargerPage;
+            break;
         case PAGE_CHARGER:
             current_page = chargerPage;
             break;

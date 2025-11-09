@@ -3,13 +3,13 @@
 // MainPage Implementation
 MainPage::MainPage(void* uiManager) {
     setUIManager(uiManager);
-    buttons[0] = new Button(20, 80, 200, 60, "Charger", "c");
-    buttons[1] = new Button(20, 160, 200, 60, "Discharger", "d");
-    buttons[2] = new Button(20, 240, 200, 60, "Settings", "s");
+    buttons[0] = new PagingButton(20, 80, 200, 60, "Charger", "c");
+    buttons[1] = new PagingButton(20, 160, 200, 60, "Discharger", "d");
+    buttons[2] = new PagingButton(20, 240, 200, 60, "Settings", "s");
 
     // Buttons auf UIManager referenzieren
     for (int i = 0; i < 3; i++) {
-        buttons[i]->setUIManager(uiManager);
+        buttons[i]->setUIManager((UIManager*)uiManager);
     }
 }
 
@@ -36,18 +36,6 @@ void MainPage::draw(LGFX* gfx) {
 }
 
 void MainPage::handleTouch(int touchX, int touchY) {
-    for (int i = 0; i < 3; i++) {
-        if (buttons[i]->isPressed(touchX, touchY)) {
-            String& pageTarget = buttons[i]->pageTarget;
-            if (pageTarget.equals("m")) {
-                ((UIManager*)getUIManager())->switchPage(PAGE_MAIN);
-            } else if (pageTarget.equals("c")) {
-                ((UIManager*)getUIManager())->switchPage(PAGE_CHARGER);
-            } else if (pageTarget.equals("d") ) {
-                ((UIManager*)getUIManager())->switchPage(PAGE_DISCHARGER);
-            } else if (pageTarget.equals("s")) {
-                ((UIManager*)getUIManager())->switchPage(PAGE_SETTINGS);
-            }
-        }
-    }
+    // MainPage hat keine Touch-Logik, da alle Buttons PagingButtons sind
+    // Die Buttons behandeln ihre eigenen Touch-Ereignisse
 }

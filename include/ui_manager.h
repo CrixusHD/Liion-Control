@@ -167,6 +167,7 @@ public:
     // Für Buttons benötigt
     void handleButtonPress(const String &pageTarget);
     void* getUIManager() { return this; }
+    LGFX* getTft() const { return tft; }
 };
 
 #endif
