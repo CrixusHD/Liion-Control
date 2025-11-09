@@ -1,5 +1,7 @@
 #include "ui_manager.h"
 
+#include "../../../../Users/Nick/.platformio/packages/toolchain-riscv32-esp/riscv32-esp-elf/include/c++/8.4.0/atomic"
+
 // UIManager Implementation
 UIManager::UIManager(LGFX *tft, GT911Touch *touch)
     : tft(tft), touch(touch), currentPage(PAGE_MAIN),
@@ -9,6 +11,7 @@ UIManager::UIManager(LGFX *tft, GT911Touch *touch)
     dischargerSettingsPage = new DischargerSettingsPage(this);
     settingsPage = new SettingsPage(this);
     dischargerPage = new DischargerPage(this);
+    chargerPage = new ChargerPage(this);
 
     current_page = mainPage;
 }
@@ -44,14 +47,21 @@ void UIManager::update() {
     }
 }
 
+volatile bool notPressed = true;
+
 void UIManager::handleTouch() {
     uint16_t touchX, touchY;
-    if (touch->read(&touchX, &touchY)) {
+    if (touch->read(&touchX, &touchY) && notPressed) {
+        notPressed = false;
         int x = map(touchX, 0, 480, 0, 800);
         int y = map(touchY, 0, 270, 0, 480);
 
         // Seite aktualisieren
         current_page->handleTouch(x, y);
+    }
+
+    if (touchX == 15 && touchY == 0){
+        notPressed = true;
     }
 }
 
@@ -62,7 +72,7 @@ void UIManager::drawPage() {
 
 void UIManager::switchPage(Page page) {
     currentPage = page;
-
+    Serial.println(page);
     switch (page) {
         case PAGE_MAIN:
             current_page = mainPage;
@@ -75,6 +85,8 @@ void UIManager::switchPage(Page page) {
             break;
         case PAGE_DISCHARGER:
             current_page = dischargerPage;
+        case PAGE_CHARGER:
+            current_page = chargerPage;
             break;
         case PAGE_SETTINGS:
             current_page = settingsPage;
@@ -93,6 +105,10 @@ void UIManager::handleButtonPress(const String &pageTarget) {
     }
     if (pageTarget.equals("d")) {
         switchPage(PAGE_DISCHARGER);
+        return;
+    }
+    if (pageTarget.equals("c")) {
+        switchPage(PAGE_CHARGER);
         return;
     }
     if (pageTarget.equals("s-c")) {

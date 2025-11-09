@@ -1,8 +1,8 @@
 #include "ui_manager.h"
 #include "helper/drawing_helper.h"
 
-// DischargerPage Implementation
-DischargerPage::DischargerPage(void* uiManager) : SecondPageBase(uiManager, "s"), pageNumber(0), selectedAkku(0){
+// ChargerPage Implementation
+ChargerPage::ChargerPage(void* uiManager) : SecondPageBase(uiManager, "s"), pageNumber(0), selectedAkku(0){
     setUIManager(uiManager);
     prevButton = new Button(20, 80, 200, 60, "Prev");
     nextButton = new Button(280, 80, 200, 60, "Forw");
@@ -29,7 +29,7 @@ DischargerPage::DischargerPage(void* uiManager) : SecondPageBase(uiManager, "s")
     }
 }
 
-DischargerPage::~DischargerPage() {
+ChargerPage::~ChargerPage() {
     delete prevButton;
     delete nextButton;
     delete startButton;
@@ -41,9 +41,9 @@ DischargerPage::~DischargerPage() {
     }
 }
 
-void DischargerPage::draw(LGFX* gfx) {
+void ChargerPage::draw(LGFX* gfx) {
     // Seitenlayout
-    draw_split_page(gfx, "Discharger " + String(pageNumber + 1));
+    draw_split_page(gfx, "Charger " + String(pageNumber + 1));
 
     // Buttons zeichnen
     getBackButton()->draw(gfx);
@@ -70,7 +70,7 @@ void DischargerPage::draw(LGFX* gfx) {
     // (In der echten Implementierung hier die Akku-Daten anzeigen)
 }
 
-void DischargerPage::handleTouch(int touchX, int touchY) {
+void ChargerPage::handleTouch(int touchX, int touchY) {
     // Back Button
     if (getBackButton()->isPressed(touchX, touchY)) {
         ((UIManager*)getUIManager())->switchPage(PAGE_MAIN);
@@ -78,11 +78,11 @@ void DischargerPage::handleTouch(int touchX, int touchY) {
     
     // Seitenwechsel
     if (prevButton->isPressed(touchX, touchY)) {
-        // Vorherige Seite
+        pageNumber -= 1;
     }
     
     if (nextButton->isPressed(touchX, touchY)) {
-        // Nächste Seite
+        pageNumber *= 1;
     }
     
     // Akku Auswahl
@@ -107,6 +107,6 @@ void DischargerPage::handleTouch(int touchX, int touchY) {
     }
 }
 
-void DischargerPage::updateAkkuData() {
+void ChargerPage::updateAkkuData() {
     // Akku-Daten aktualisieren
 }

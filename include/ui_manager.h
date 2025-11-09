@@ -110,6 +110,7 @@ public:
     void handleTouch(int touchX, int touchY) override;
     void updateAkkuData();
 };
+
 class ChargerPage : public SecondPageBase {
 private:
     Button* prevButton;
@@ -146,6 +147,7 @@ private:
     DischargerSettingsPage* dischargerSettingsPage;
     SettingsPage* settingsPage;
     DischargerPage* dischargerPage;
+    ChargerPage* chargerPage;
 
 public:
     UIManager(LGFX* tft, GT911Touch* touch);

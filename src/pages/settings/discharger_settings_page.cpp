@@ -50,7 +50,7 @@ void DischargerSettingsPage::draw(LGFX *gfx) {
 void DischargerSettingsPage::handleTouch(int touchX, int touchY) {
     // Back Button
     if (getBackButton()->isPressed(touchX, touchY)) {
-        ((UIManager *) getUIManager())->switchPage(PAGE_MAIN);
+        ((UIManager *) getUIManager())->switchPage(PAGE_SETTINGS);
     }
 
     // Address Auswahl

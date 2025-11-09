@@ -4,7 +4,7 @@
 // SettingsPage Implementation
 SettingsPage::SettingsPage(void *uiManager) : SecondPageBase(uiManager, "m"), secondPage('m') {
     setUIManager(uiManager);
-    backButton = new Button(20, 2, 100, 40, "Back", "m");
+    backButton = new Button(20, 2, 120, 60, "Back", "m");
     chargerButton = new Button(20, 120, 200, 60, "Charge", "s-c");
     dischargerButton = new Button(20, 200, 200, 60, "Discharge", "s-d");
 
