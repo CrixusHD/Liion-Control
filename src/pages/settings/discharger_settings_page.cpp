@@ -9,7 +9,6 @@ DischargerSettingsPage::DischargerSettingsPage(void *uiManager) : SecondPageBase
         int x = (i < 5) ? 20 : 280;
         int y = 170 + (i % 5) * 80;
         addressButtons[i] = new Button(x, y, 200, 60, String(i));
-        addressButtons[i]->setUIManager(uiManager);
     }
 }
 

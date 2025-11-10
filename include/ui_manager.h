@@ -30,7 +30,7 @@ public:
 
 class SecondPageBase : public PageBase {
 private:
-    Button* backButton;
+    PagingButton* backButton;
 public:
     SecondPageBase(void* uiManager, const String &targetPage);
 
@@ -41,7 +41,7 @@ public:
 
 class MainPage : public PageBase {
 private:
-    Button* buttons[3];
+    PagingButton* buttons[3];
 
 public:
     MainPage(void* uiManager);
@@ -77,9 +77,9 @@ public:
 
 class SettingsPage : public SecondPageBase {
 private:
-    Button* backButton;
-    Button* chargerButton;
-    Button* dischargerButton;
+    PagingButton* backButton;
+    PagingButton* chargerButton;
+    PagingButton* dischargerButton;
 
     int secondPage;
 
@@ -115,12 +115,8 @@ class ChargerPage : public SecondPageBase {
 private:
     Button* prevButton;
     Button* nextButton;
-    Button* startButton;
-    Button* stopButton;
-    Button* resetButton;
-    Button* akkuButtons[8];
-    int selectedAkku;
     int pageNumber;
+    float voltages[8];
 
 public:
     ChargerPage(void* uiManager);

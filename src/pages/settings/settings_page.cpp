@@ -4,14 +4,14 @@
 // SettingsPage Implementation
 SettingsPage::SettingsPage(void *uiManager) : SecondPageBase(uiManager, "m"), secondPage('m') {
     setUIManager(uiManager);
-    backButton = new Button(20, 2, 120, 60, "Back", "m");
-    chargerButton = new Button(20, 120, 200, 60, "Charge", "s-c");
-    dischargerButton = new Button(20, 200, 200, 60, "Discharge", "s-d");
+    backButton = new PagingButton(20, 2, 120, 60, "Back", "m");
+    chargerButton = new PagingButton(20, 120, 200, 60, "Charge", "s-c");
+    dischargerButton = new PagingButton(20, 200, 200, 60, "Discharge", "s-d");
 
     // Buttons auf UIManager referenzieren
-    backButton->setUIManager(uiManager);
-    chargerButton->setUIManager(uiManager);
-    dischargerButton->setUIManager(uiManager);
+    backButton->setUIManager((UIManager*)uiManager);
+    chargerButton->setUIManager((UIManager*)uiManager);
+    dischargerButton->setUIManager((UIManager*)uiManager);
 }
 
 SettingsPage::~SettingsPage() {

@@ -1,9 +1,11 @@
 #include "ui/button.h"
+
+#include "ui_manager.h"
 #include "helper/drawing_helper.h"
 
 // Button Implementation
 Button::Button(int x, int y, int width, int height, String text, const String &pageTarget, bool disabled)
-    : x(x), y(y), width(width), height(height), text(text), pageTarget(pageTarget), disabled(disabled), uiManager(nullptr) {}
+    : x(x), y(y), width(width), height(height), text(text), pageTarget(pageTarget), disabled(disabled) {}
 
 void Button::draw(LGFX* gfx) {
     if (disabled) {
@@ -35,26 +37,4 @@ bool PagingButton::isPressed(int touchX, int touchY) {
         return true;
     }
     return Button::isPressed(touchX, touchY);
-}
-
-// ActionButton Implementation
-ActionButton::ActionButton(int x, int y, int width, int height, String text, ActionFunction action, void* param)
-    : Button(x, y, width, height, text), action(action), param(param) {}
-
-void ActionButton::draw(LGFX* gfx) {
-    Button::draw(gfx);
-}
-
-bool ActionButton::isPressed(int touchX, int touchY) {
-    if (Button::isPressed(touchX, touchY) && uiManager != nullptr) {
-        executeAction();
-        return true;
-    }
-    return Button::isPressed(touchX, touchY);
-}
-
-void ActionButton::executeAction() {
-    if (action != nullptr) {
-        action(param);
-    }
 }
