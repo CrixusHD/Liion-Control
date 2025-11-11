@@ -8,7 +8,7 @@ class LGFX;
 
 void draw_base_page(LGFX* gfx, const String &title);
 void draw_split_page(LGFX* gfx, const String &title);
-void draw_button(LGFX* gfx, const int x, const int y, const int width, const int height, const String &text);
+void draw_button(LGFX* gfx, const int x, const int y, const int width, const int height, const String &text, bool disabled = false);
 void clear_header(LGFX* gfx);
 
 #endif

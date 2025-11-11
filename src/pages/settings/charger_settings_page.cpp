@@ -2,7 +2,7 @@
 #include "helper/drawing_helper.h"
 
 // ChargerSettingsPage Implementation
-ChargerSettingsPage::ChargerSettingsPage(void *uiManager) : SecondPageBase(uiManager, "s") {
+ChargerSettingsPage::ChargerSettingsPage(UIManager* uiManager) : SecondPageBase(uiManager, "s") {
     // backButton wird bereits in SecondPageBase initialisiert
 
     // Address Buttons
@@ -50,10 +50,7 @@ void ChargerSettingsPage::draw(LGFX *gfx) {
 }
 
 void ChargerSettingsPage::handleTouch(int touchX, int touchY) {
-    if (getBackButton()->isPressed(touchX, touchY)) {
-        // Zurück zur Hauptseite
-        ((UIManager *) getUIManager())->switchPage(PAGE_SETTINGS);
-    }
+    getBackButton()->isPressed(touchX, touchY);
     // Address Auswahl
     for (int i = 0; i < 10; i++) {
         if (addressButtons[i]->isPressed(touchX, touchY)) {

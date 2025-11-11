@@ -1,24 +1,29 @@
 #include "ui_manager.h"
 #include "helper/drawing_helper.h"
 // DischargerPage Implementation
-DischargerSettingsPage::DischargerSettingsPage(void *uiManager) : SecondPageBase(uiManager, "s") {
+DischargerSettingsPage::DischargerSettingsPage(UIManager* uiManager) : SecondPageBase(uiManager, "s")
+{
     setUIManager(uiManager);
 
     // Address Buttons
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         int x = (i < 5) ? 20 : 280;
         int y = 170 + (i % 5) * 80;
         addressButtons[i] = new Button(x, y, 200, 60, String(i));
     }
 }
 
-DischargerSettingsPage::~DischargerSettingsPage() {
-    for (int i = 0; i < 10; i++) {
+DischargerSettingsPage::~DischargerSettingsPage()
+{
+    for (int i = 0; i < 10; i++)
+    {
         delete addressButtons[i];
     }
 }
 
-void DischargerSettingsPage::draw(LGFX *gfx) {
+void DischargerSettingsPage::draw(LGFX* gfx)
+{
     // Seitenlayout
     draw_split_page(gfx, "Discharger Settings ");
 
@@ -30,7 +35,8 @@ void DischargerSettingsPage::draw(LGFX *gfx) {
     gfx->print("Select Address");
 
     // Zeige aktuelle Adressen
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         gfx->setCursor(600, 90 + i * 40);
         gfx->print(i);
         gfx->print(':');
@@ -39,22 +45,23 @@ void DischargerSettingsPage::draw(LGFX *gfx) {
     }
 
     // Button zum Auswählen von Adressen
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         int x = (i < 5) ? 20 : 280;
         int y = 170 + (i % 5) * 80;
         addressButtons[i]->draw(gfx);
     }
 }
 
-void DischargerSettingsPage::handleTouch(int touchX, int touchY) {
-    // Back Button
-    if (getBackButton()->isPressed(touchX, touchY)) {
-        ((UIManager *) getUIManager())->switchPage(PAGE_SETTINGS);
-    }
+void DischargerSettingsPage::handleTouch(int touchX, int touchY)
+{
+    getBackButton()->isPressed(touchX, touchY);
 
     // Address Auswahl
-    for (int i = 0; i < 10; i++) {
-        if (addressButtons[i]->isPressed(touchX, touchY)) {
+    for (int i = 0; i < 10; i++)
+    {
+        if (addressButtons[i]->isPressed(touchX, touchY))
+        {
             // Adresse auswählen
             addressSelection = String(i);
             address = "";
@@ -62,11 +69,13 @@ void DischargerSettingsPage::handleTouch(int touchX, int touchY) {
     }
 
     // Speichern Button
-    if (!addressSelection.isEmpty() && !address.isEmpty()) {
+    if (!addressSelection.isEmpty() && !address.isEmpty())
+    {
         // Speichern Button (würde hier implementiert)
     }
 }
 
-void DischargerSettingsPage::updateAkkuData() {
+void DischargerSettingsPage::updateAkkuData()
+{
     // Akku-Daten aktualisieren
 }

@@ -3,15 +3,15 @@
 // UIManager Implementation
 UIManager::UIManager(LGFX *tft, GT911Touch *touch)
     : tft(tft), touch(touch), currentPage(PAGE_MAIN),
-      selectedAkku(0), pageNumber(0), lastRender(0), lastI2CRequest(0) {
-    mainPage = new MainPage(this);
-    chargerSettingsPage = new ChargerSettingsPage(this);
-    dischargerSettingsPage = new DischargerSettingsPage(this);
-    settingsPage = new SettingsPage(this);
-    dischargerPage = new DischargerPage(this);
-    chargerPage = new ChargerPage(this);
+      selectedAkku(0), pageNumber(0), lastRender(0), lastI2CRequest(0), lastTouch(0) {
+    // mainPage = new MainPage(this);
+    // chargerSettingsPage = new ChargerSettingsPage(this);
+    // dischargerSettingsPage = new DischargerSettingsPage(this);
+    // settingsPage = new SettingsPage(this);
+    // dischargerPage = new DischargerPage(this);
+    // chargerPage = new ChargerPage(this);
 
-    current_page = mainPage;
+    current_page = new MainPage(this);;
 }
 
 UIManager::~UIManager() {
@@ -32,7 +32,10 @@ void UIManager::begin() {
 
 void UIManager::update() {
     // Touch-Handling
-    handleTouch();
+    if (millis() - lastTouch > 10) {
+        lastTouch = millis();
+        handleTouch();
+    }
 
     // Rendering
     if (millis() - lastRender > 100) {
@@ -50,7 +53,8 @@ void UIManager::update() {
 volatile bool notPressed = true;
 
 void UIManager::handleTouch() {
-    uint16_t touchX, touchY;
+    uint16_t touchX, touchY = 0;
+
     if (touch->read(&touchX, &touchY) && notPressed) {
         notPressed = false;
         int x = map(touchX, 0, 480, 0, 800);
@@ -71,32 +75,33 @@ void UIManager::drawPage() {
 }
 
 void UIManager::switchPage(Page page) {
-    currentPage = page;
-    Serial.println(page);
+
+    auto old_page = current_page;
     switch (page) {
         case PAGE_MAIN:
-            current_page = mainPage;
+            current_page = new MainPage(this);
             break;
         case PAGE_CHARGER_SETTINGS:
-            current_page = chargerSettingsPage;
+            current_page = new ChargerSettingsPage(this);
             break;
         case PAGE_DISCHARGER_SETTINGS:
-            current_page = dischargerSettingsPage;
+            current_page = new DischargerSettingsPage(this);
             break;
         case PAGE_DISCHARGER:
-            current_page = dischargerPage;
+            current_page = new DischargerPage(this);
             break;
         case PAGE_CHARGER:
-            current_page = chargerPage;
+            current_page = new ChargerPage(this);
             break;
         case PAGE_SETTINGS:
-            current_page = settingsPage;
+            current_page = new SettingsPage(this);
             break;
     }
 
     // Seite neu zeichnen
     tft->fillScreen(TFT_WHITE);
     current_page->draw(tft);
+    delete old_page;
 }
 
 void UIManager::handleButtonPress(const String &pageTarget) {

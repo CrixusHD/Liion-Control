@@ -2,25 +2,23 @@
 #include "helper/drawing_helper.h"
 
 // SettingsPage Implementation
-SettingsPage::SettingsPage(void *uiManager) : SecondPageBase(uiManager, "m"), secondPage('m') {
+SettingsPage::SettingsPage(UIManager* uiManager) : SecondPageBase(uiManager, "m"), secondPage('m')
+{
     setUIManager(uiManager);
-    backButton = new PagingButton(20, 2, 120, 60, "Back", "m");
-    chargerButton = new PagingButton(20, 120, 200, 60, "Charge", "s-c");
-    dischargerButton = new PagingButton(20, 200, 200, 60, "Discharge", "s-d");
-
-    // Buttons auf UIManager referenzieren
-    backButton->setUIManager((UIManager*)uiManager);
-    chargerButton->setUIManager((UIManager*)uiManager);
-    dischargerButton->setUIManager((UIManager*)uiManager);
+    backButton = new PagingButton(20, 2, 120, 60, "Back", "m", uiManager);
+    chargerButton = new PagingButton(20, 120, 200, 60, "Charge", "s-c", uiManager);
+    dischargerButton = new PagingButton(20, 200, 200, 60, "Discharge", "s-d", uiManager);
 }
 
-SettingsPage::~SettingsPage() {
+SettingsPage::~SettingsPage()
+{
     delete backButton;
     delete chargerButton;
     delete dischargerButton;
 }
 
-void SettingsPage::draw(LGFX *gfx) {
+void SettingsPage::draw(LGFX* gfx)
+{
     // Seitenlayout
     draw_base_page(gfx, "Settings Page");
 
@@ -31,25 +29,19 @@ void SettingsPage::draw(LGFX *gfx) {
     dischargerButton->draw(gfx);
 }
 
-void SettingsPage::handleTouch(int touchX, int touchY) {
-    if (backButton->isPressed(touchX, touchY)) {
-        ((UIManager *) getUIManager())->switchPage(PAGE_MAIN);
-    }
-    if (chargerButton->isPressed(touchX, touchY)) {
-        // Wechsel zur Charger-Seite
-        ((UIManager *) getUIManager())->switchPage(PAGE_CHARGER_SETTINGS);
-    }
-    if (dischargerButton->isPressed(touchX, touchY)) {
-        // Wechsel zur Charger-Seite
-        ((UIManager *) getUIManager())->switchPage(PAGE_DISCHARGER_SETTINGS);
-    }
-
+void SettingsPage::handleTouch(int touchX, int touchY)
+{
+    backButton->isPressed(touchX, touchY);
+    chargerButton->isPressed(touchX, touchY);
+    dischargerButton->isPressed(touchX, touchY);
 }
 
-void SettingsPage::saveAddress() {
+void SettingsPage::saveAddress()
+{
     // Adresse speichern
 }
 
-void SettingsPage::saveChargerAddress() {
+void SettingsPage::saveChargerAddress()
+{
     // Charger Adresse speichern
 }

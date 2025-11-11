@@ -2,7 +2,7 @@
 #include "helper/drawing_helper.h"
 
 // DischargerPage Implementation
-DischargerPage::DischargerPage(void* uiManager) : SecondPageBase(uiManager, "s"), pageNumber(0), selectedAkku(0){
+DischargerPage::DischargerPage(UIManager* uiManager) : SecondPageBase(uiManager, "m"), pageNumber(0), selectedAkku(0){
     setUIManager(uiManager);
     prevButton = new Button(20, 80, 200, 60, "Prev");
     nextButton = new Button(280, 80, 200, 60, "Forw");
@@ -60,10 +60,7 @@ void DischargerPage::draw(LGFX* gfx) {
 }
 
 void DischargerPage::handleTouch(int touchX, int touchY) {
-    // Back Button
-    if (getBackButton()->isPressed(touchX, touchY)) {
-        ((UIManager*)getUIManager())->switchPage(PAGE_MAIN);
-    }
+    getBackButton()->isPressed(touchX, touchY);
     
     // Seitenwechsel
     if (prevButton->isPressed(touchX, touchY)) {

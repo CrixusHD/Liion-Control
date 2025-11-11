@@ -18,8 +18,12 @@ void draw_split_page(LGFX* gfx, const String &title) {
     gfx->writeFastVLine(501, 70, 480, MAIN_FONT_COLOR);
 }
 
-void draw_button(LGFX* gfx, const int x, const int y, const int width, const int height, const String &text) {
+void draw_button(LGFX* gfx, const int x, const int y, const int width, const int height, const String &text, bool disabled) {
     // Zeichne Button-Rahmen
+    if (disabled)
+    {
+        gfx->writeFillRect(x, y, width, height, TFT_LIGHTGRAY);
+    }
     gfx->drawRect(x, y, width, height, MAIN_BUTTON_LINE_COLOR);
 
     // Zeichne Button-Inhalt

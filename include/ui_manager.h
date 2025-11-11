@@ -18,21 +18,21 @@ enum Page {
 
 class PageBase {
 private:
-    void* uiManager;
+    UIManager* uiManager;
 public:
     virtual void draw(LGFX* gfx) = 0;
     virtual void handleTouch(int touchX, int touchY) = 0;
     virtual ~PageBase() = default;
 
-    void setUIManager(void* manager) { uiManager = manager; }
-    void* getUIManager() { return uiManager; }
+    void setUIManager(UIManager* manager) { uiManager = manager; }
+    UIManager* getUIManager() const { return uiManager; }
 };
 
 class SecondPageBase : public PageBase {
 private:
     PagingButton* backButton;
 public:
-    SecondPageBase(void* uiManager, const String &targetPage);
+    SecondPageBase(UIManager* uiManager, const String &targetPage);
 
     virtual ~SecondPageBase();
 
@@ -44,7 +44,7 @@ private:
     PagingButton* buttons[3];
 
 public:
-    MainPage(void* uiManager);
+    MainPage(UIManager* uiManager);
     ~MainPage();
     void draw(LGFX* gfx) override;
     void handleTouch(int touchX, int touchY) override;
@@ -55,7 +55,7 @@ class ChargerSettingsPage : public SecondPageBase {
     String addressSelection;
     String address;
 public:
-    ChargerSettingsPage(void* uiManager);
+    ChargerSettingsPage(UIManager* uiManager);
     ~ChargerSettingsPage();
     void draw(LGFX* gfx) override;
     void handleTouch(int touchX, int touchY) override;
@@ -68,7 +68,7 @@ private:
     String address;
 
 public:
-    DischargerSettingsPage(void* uiManager);
+    DischargerSettingsPage(UIManager* uiManager);
     ~DischargerSettingsPage();
     void draw(LGFX* gfx) override;
     void handleTouch(int touchX, int touchY) override;
@@ -84,7 +84,7 @@ private:
     int secondPage;
 
 public:
-    SettingsPage(void* uiManager);
+    SettingsPage(UIManager* uiManager);
     ~SettingsPage();
     void draw(LGFX* gfx) override;
     void handleTouch(int touchX, int touchY) override;
@@ -104,7 +104,7 @@ private:
     int pageNumber;
 
 public:
-    DischargerPage(void* uiManager);
+    DischargerPage(UIManager* uiManager);
     ~DischargerPage();
     void draw(LGFX* gfx) override;
     void handleTouch(int touchX, int touchY) override;
@@ -119,7 +119,7 @@ private:
     float voltages[8];
 
 public:
-    ChargerPage(void* uiManager);
+    ChargerPage(UIManager* uiManager);
     ~ChargerPage();
     void draw(LGFX* gfx) override;
     void handleTouch(int touchX, int touchY) override;
@@ -136,6 +136,7 @@ private:
     int pageNumber;
     unsigned long lastRender;
     unsigned long lastI2CRequest;
+    unsigned long lastTouch;
 
     // Seiten
     MainPage* mainPage;

@@ -4,7 +4,7 @@
 
 // ChargerPage Implementation
 
-ChargerPage::ChargerPage(void *uiManager) : SecondPageBase(uiManager, "s") {
+ChargerPage::ChargerPage(UIManager* uiManager) : SecondPageBase(uiManager, "m"), pageNumber(0) {
     setUIManager(uiManager);
     prevButton = new Button(20, 80, 200, 60, "Prev");
     nextButton = new Button(280, 80, 200, 60, "Forw");
@@ -23,6 +23,7 @@ void ChargerPage::draw(LGFX *gfx) {
 
     // Seitennummerierung
     if (pageNumber > 0) {
+        prevButton->disabled = false;
         prevButton->draw(gfx);
     } else {
         prevButton->disabled = true;
@@ -30,6 +31,7 @@ void ChargerPage::draw(LGFX *gfx) {
     }
 
     if (pageNumber < 7) {
+        nextButton->disabled = false;
         nextButton->draw(gfx);
     } else {
         nextButton->disabled = true;
@@ -50,9 +52,7 @@ void ChargerPage::draw(LGFX *gfx) {
 
 void ChargerPage::handleTouch(int touchX, int touchY) {
     // Back Button
-    if (getBackButton()->isPressed(touchX, touchY)) {
-        ((UIManager *) getUIManager())->switchPage(PAGE_MAIN);
-    }
+    getBackButton()->isPressed(touchX, touchY);
 
     // Seitenwechsel
     if (prevButton->isPressed(touchX, touchY)) {

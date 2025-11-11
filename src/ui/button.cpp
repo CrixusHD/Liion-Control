@@ -4,35 +4,39 @@
 #include "helper/drawing_helper.h"
 
 // Button Implementation
-Button::Button(int x, int y, int width, int height, String text, const String &pageTarget, bool disabled)
-    : x(x), y(y), width(width), height(height), text(text), pageTarget(pageTarget), disabled(disabled) {}
-
-void Button::draw(LGFX* gfx) {
-    if (disabled) {
-        // Zeichne deaktivierten Button (z.B. grau)
-        gfx->fillRect(x, y, width, height, TFT_LIGHTGREY);
-        gfx->drawRect(x, y, width, height, TFT_BLACK);
-    } else {
-        draw_button(gfx, x, y, width, height, text);
-    }
+Button::Button(int x, int y, int width, int height, String text, const String& pageTarget)
+    : x(x), y(y), width(width), height(height), text(text), pageTarget(pageTarget)
+{
 }
 
-bool Button::isPressed(int touchX, int touchY) {
+void Button::draw(LGFX* gfx)
+{
+    draw_button(gfx, x, y, width, height, text, disabled);
+}
+
+bool Button::isPressed(int touchX, int touchY)
+{
     if (disabled) return false;
     return (touchX > x && touchX < (x + width) &&
-            touchY > y && touchY < (y + height));
+        touchY > y && touchY < (y + height));
 }
 
 // PagingButton Implementation
-PagingButton::PagingButton(int x, int y, int width, int height, String text, const String& pageTarget)
-    : Button(x, y, width, height, text, pageTarget) {}
+PagingButton::PagingButton(int x, int y, int width, int height, String text, const String& pageTarget,
+                           UIManager* uiManager)
+    : Button(x, y, width, height, text, pageTarget), uiManager(uiManager)
+{
+}
 
-void PagingButton::draw(LGFX* gfx) {
+void PagingButton::draw(LGFX* gfx)
+{
     Button::draw(gfx);
 }
 
-bool PagingButton::isPressed(int touchX, int touchY) {
-    if (Button::isPressed(touchX, touchY) && uiManager != nullptr) {
+bool PagingButton::isPressed(int touchX, int touchY)
+{
+    if (Button::isPressed(touchX, touchY) && uiManager != nullptr)
+    {
         uiManager->handleButtonPress(pageTarget);
         return true;
     }

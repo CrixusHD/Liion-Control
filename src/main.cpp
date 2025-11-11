@@ -33,5 +33,4 @@ void setup() {
 
 void loop() {
     uiManager.update();
-    delay(10);
 }
