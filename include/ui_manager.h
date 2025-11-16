@@ -81,8 +81,6 @@ private:
     PagingButton* chargerButton;
     PagingButton* dischargerButton;
 
-    int secondPage;
-
 public:
     SettingsPage(UIManager* uiManager);
     ~SettingsPage();
@@ -100,8 +98,8 @@ private:
     Button* stopButton;
     Button* resetButton;
     Button* akkuButtons[8];
-    int selectedAkku;
-    int pageNumber;
+    int selectedAkku = 0;
+    int pageNumber = 0;
 
 public:
     DischargerPage(UIManager* uiManager);
@@ -115,8 +113,8 @@ class ChargerPage : public SecondPageBase {
 private:
     Button* prevButton;
     Button* nextButton;
-    int pageNumber;
-    float voltages[8];
+    int pageNumber = 0;
+    float voltages[8] = {0,0,0,0,0,0,0,0};
 
 public:
     ChargerPage(UIManager* uiManager);
@@ -132,11 +130,11 @@ private:
     GT911Touch* touch;
     Page currentPage;
     PageBase* current_page;
-    int selectedAkku;
-    int pageNumber;
-    unsigned long lastRender;
-    unsigned long lastI2CRequest;
-    unsigned long lastTouch;
+    int selectedAkku = 0;
+    int pageNumber = 0;
+    unsigned long lastRender = 0;
+    unsigned long lastI2CRequest = 0;
+    unsigned long lastTouch = 0;
 
     // Seiten
     MainPage* mainPage;

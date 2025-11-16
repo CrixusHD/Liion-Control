@@ -39,14 +39,18 @@ void DischargerPage::draw(LGFX* gfx) {
     
     // Seitennummerierung
     if (pageNumber > 0) {
+        prevButton->disabled = false;
         prevButton->draw(gfx);
     } else {
+        prevButton->disabled = true;
         gfx->writeFillRect(20, 80, 200, 60, TFT_WHITE);
     }
 
     if (pageNumber < 7) {
+        nextButton->disabled = false;
         nextButton->draw(gfx);
     } else {
+        nextButton->disabled = true;
         gfx->writeFillRect(280, 80, 200, 60, TFT_WHITE);
     }
 
@@ -65,10 +69,16 @@ void DischargerPage::handleTouch(int touchX, int touchY) {
     // Seitenwechsel
     if (prevButton->isPressed(touchX, touchY)) {
         pageNumber -= 1;
+        clear_header(((UIManager *) getUIManager())->getTft());
+        // Neu zeichnen mit neuem Titel
+        draw(((UIManager *) getUIManager())->getTft());
     }
     
     if (nextButton->isPressed(touchX, touchY)) {
         pageNumber += 1;
+        clear_header(((UIManager *) getUIManager())->getTft());
+        // Neu zeichnen mit neuem Titel
+        draw(((UIManager *) getUIManager())->getTft());
     }
     
     // Akku Auswahl

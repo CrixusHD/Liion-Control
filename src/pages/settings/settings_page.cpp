@@ -2,7 +2,7 @@
 #include "helper/drawing_helper.h"
 
 // SettingsPage Implementation
-SettingsPage::SettingsPage(UIManager* uiManager) : SecondPageBase(uiManager, "m"), secondPage('m')
+SettingsPage::SettingsPage(UIManager* uiManager) : SecondPageBase(uiManager, "m")
 {
     setUIManager(uiManager);
     backButton = new PagingButton(20, 2, 120, 60, "Back", "m", uiManager);
