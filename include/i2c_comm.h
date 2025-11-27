@@ -3,10 +3,12 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include <ArduinoJson.h>
-#include "akku_data.h"
 
 #define I2C_SLAVE_ADDR 0x55
+
+// I2C Bus
+#define I2C1_SDA_PIN 18
+#define I2C1_SCL_PIN 17
 
 class I2CComm {
 private:

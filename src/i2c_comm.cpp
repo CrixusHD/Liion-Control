@@ -32,29 +32,29 @@ void I2CComm::askForData(unsigned int responseLength, String &response) {
 }
 
 bool I2CComm::requestAkkuData() {
-    Wire.beginTransmission(I2C_SLAVE_ADDR);
-    int error = Wire.endTransmission();
-    
-    if (error != 0) return false;
-    
-    unsigned int responseLength = askForLength();
-    if (responseLength == 0) return false;
-    
-    String response = "";
-    askForData(responseLength, response);
-    
-    JsonDocument doc;
-    DeserializationError err = deserializeJson(doc, response);
-    if (err) return false;
-    
-    JsonArray arr = doc.as<JsonArray>();
-    int i = 0;
-    for (JsonVariant item : arr) {
-        if (i >= 8) break;
-        akkuDatas[i].volt = item["volt"].as<float>();
-        akkuDatas[i].isRunning = item["isRunning"].as<bool>();
-        i++;
-    }
-    
-    return true;
+    // Wire.beginTransmission(I2C_SLAVE_ADDR);
+    // int error = Wire.endTransmission();
+    //
+    // if (error != 0) return false;
+    //
+    // unsigned int responseLength = askForLength();
+    // if (responseLength == 0) return false;
+    //
+    // String response = "";
+    // askForData(responseLength, response);
+    //
+    // JsonDocument doc;
+    // DeserializationError err = deserializeJson(doc, response);
+    // if (err) return false;
+    //
+    // JsonArray arr = doc.as<JsonArray>();
+    // int i = 0;
+    // for (JsonVariant item : arr) {
+    //     if (i >= 8) break;
+    //     akkuDatas[i].volt = item["volt"].as<float>();
+    //     akkuDatas[i].isRunning = item["isRunning"].as<bool>();
+    //     i++;
+    // }
+    //
+    // return true;
 }
